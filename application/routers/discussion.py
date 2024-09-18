@@ -7,7 +7,7 @@ from application.database import get_db
 app = APIRouter()
 
 # Routes pour Discussions
-@app.post("/discussions/", response_model=schemas.DiscussionInDB)
+@app.post("/discussions", response_model=schemas.DiscussionInDB)
 def create_discussion(discussion: schemas.DiscussionCreate, db: Session = Depends(get_db)):
     return crud.create_discussion(db, discussion)
 

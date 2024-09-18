@@ -7,7 +7,7 @@ from application.database import get_db
 app = APIRouter()
 
 # Routes pour Students
-@app.post("/students/", response_model=schemas.StudentInDB)
+@app.post("/students", response_model=schemas.StudentInDB)
 def create_student(student: schemas.StudentCreate, db: Session = Depends(get_db)):
     return crud.create_student(db, student)
 

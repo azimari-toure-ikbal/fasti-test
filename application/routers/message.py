@@ -7,7 +7,7 @@ from application.database import get_db
 app = APIRouter()
 
 # Routes pour Messages
-@app.post("/messages/", response_model=schemas.MessageInDB)
+@app.post("/messages", response_model=schemas.MessageInDB)
 def create_message(message: schemas.MessageCreate, db: Session = Depends(get_db)):
     return crud.create_message(db, message)
 

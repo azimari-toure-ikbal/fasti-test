@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
 from . import models, schemas
+from werkzeug.security import generate_password_hash
+from models import Admin
 
 # CRUD pour Admins
 def create_admin(db: Session, admin: schemas.AdminCreate):
@@ -7,6 +9,7 @@ def create_admin(db: Session, admin: schemas.AdminCreate):
     db.add(db_admin)
     db.commit()
     db.refresh(db_admin)
+    db_admin.set_password() 
     return db_admin
 
 def get_admin(db: Session, admin_id: int):
@@ -18,10 +21,13 @@ def create_user(db: Session, user: schemas.ForumUserCreate):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    db_user.set_password()
     return db_user
 
 def get_user(db: Session, user_id: int):
     return db.query(models.ForumUser).filter(models.ForumUser.id == user_id).first()
+
+
 
 # CRUD pour Discussions
 def create_discussion(db: Session, discussion: schemas.DiscussionCreate):
@@ -62,6 +68,7 @@ def create_student(db: Session, student: schemas.StudentCreate):
     db.add(db_student)
     db.commit()
     db.refresh(db_student)
+    db_student.set_password()
     return db_student
 
 def get_student(db: Session, student_id: int):

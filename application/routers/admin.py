@@ -7,7 +7,7 @@ from application.database import get_db
 app = APIRouter()
 
 # Routes pour Admins
-@app.post("/admins/", response_model=schemas.AdminInDB)
+@app.post("/admins", response_model=schemas.AdminInDB)
 def create_admin(admin: schemas.AdminCreate, db: Session = Depends(get_db)):
     return crud.create_admin(db, admin)
 

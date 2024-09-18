@@ -7,7 +7,7 @@ from application.database import get_db
 app = APIRouter()
 
 # Routes pour Profiles
-@app.post("/profiles/", response_model=schemas.ProfileInDB)
+@app.post("/profiles", response_model=schemas.ProfileInDB)
 def create_profile(profile: schemas.ProfileCreate, db: Session = Depends(get_db)):
     return crud.create_profile(db, profile)
 

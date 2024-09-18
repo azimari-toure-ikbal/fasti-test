@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, Table, Enum, BigInteger
+from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, Table, Enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from datetime import datetime
@@ -7,13 +7,6 @@ from werkzeug.security import generate_password_hash
 # Crée une instance de Base
 Base = declarative_base()
 
-# # Table d'association pour la relation Many-to-Many entre Student et Subject
-# association_table = Table(
-#     'student_subject',
-#     Base.metadata,
-#     Column('student_id', Integer, ForeignKey('etudiants.num_etu'), primary_key=True),
-#     Column('subject_id', Integer, ForeignKey('sujets.id'), primary_key=True)
-# )
 
 class Admin(Base):
     __tablename__ = "administrations"
@@ -25,8 +18,8 @@ class Admin(Base):
     poste = Column(String)
     creation = Column(DateTime, default=datetime.utcnow)
 
-    def set_password(self, password):
-        self.mdp = generate_password_hash(password)
+    def set_password(self):
+        self.mdp = generate_password_hash(self.mdp)
 
 class ForumUser(Base):
     __tablename__ = "utilisateurs"
@@ -38,8 +31,8 @@ class ForumUser(Base):
     role = Column(Enum('etudiant', 'moderateur', 'admin', name='user_roles'), nullable=False)
     creation = Column(DateTime, default=datetime.utcnow)
 
-    def set_password(self, password):
-        self.mdp = generate_password_hash(password)
+    def set_password(self):
+        self.mdp = generate_password_hash(self.mdp)
 
 class Discussion(Base):
     __tablename__ = "discussions"
@@ -73,7 +66,7 @@ class Profile(Base):
 
 class Student(Base):
     __tablename__ = "etudiants"
-    num_etu = Column(Integer, primary_key=True, unique=True, index=True)
+    num_etu = Column(String, primary_key=True, unique=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     mdp = Column(String, nullable=False)
     prenom = Column(String, nullable=False)
@@ -83,8 +76,8 @@ class Student(Base):
     creation = Column(DateTime, default=datetime.utcnow)
 
 
-    def set_password(self, password):
-        self.mdp = generate_password_hash(password)
+    def set_password(self):
+        self.mdp = generate_password_hash(self.mdp)
 
 class Subject(Base):
     __tablename__ = "sujets"

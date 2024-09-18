@@ -7,7 +7,7 @@ from application.database import get_db
 app = APIRouter()
 
 # Routes pour Subjects
-@app.post("/subjects/", response_model=schemas.SubjectInDB)
+@app.post("/subjects", response_model=schemas.SubjectInDB)
 def create_subject(subject: schemas.SubjectCreate, db: Session = Depends(get_db)):
     return crud.create_subject(db, subject)
 
