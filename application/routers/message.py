@@ -14,3 +14,7 @@ def create_message(message: schemas.MessageCreate, db: Session = Depends(get_db)
 @app.get("/messages/{message_id}", response_model=schemas.MessageInDB)
 def get_message(message_id: int, db: Session = Depends(get_db)):
     return crud.get_message(db, message_id)
+
+@app.delete("/messages/{message_id}", response_model=schemas.MessageInDB)
+def delete_message(message_id: int, db: Session = Depends(get_db)):
+    return crud.delete_message(db, message_id)

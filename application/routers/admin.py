@@ -14,3 +14,7 @@ def create_admin(admin: schemas.AdminCreate, db: Session = Depends(get_db)):
 @app.get("/admins/{admin_id}", response_model=schemas.AdminInDB)
 def get_admin(admin_id: int, db: Session = Depends(get_db)):
     return crud.get_admin(db, admin_id)
+
+@app.delete("/admins/{admin_id}", response_model=schemas.AdminInDB)
+def delete_admin(admin_id: int, db: Session = Depends(get_db)):
+    return crud.delete_admin(db, admin_id)
