@@ -18,3 +18,7 @@ def get_admin(admin_id: int, db: Session = Depends(get_db)):
 @app.delete("/admins/{admin_id}", response_model=schemas.AdminInDB)
 def delete_admin(admin_id: int, db: Session = Depends(get_db)):
     return crud.delete_admin(db, admin_id)
+
+@app.put("/admins/{admin_id}", response_model=schemas.AdminInDB)
+def put_admin(admin_id: int, db: Session = Depends(get_db)):
+    return crud.update_admin(db, admin_id)

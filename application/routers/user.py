@@ -18,3 +18,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 @app.delete("/users/{user_id}", response_model=schemas.ForumUserInDB)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     return crud.delete_user(db, user_id)
+
+@app.put("/users/{user_id}", response_model=schemas.ForumUserInDB)
+def put_user(user_id: int, db: Session = Depends(get_db)):
+    return crud.update_user(db, user_id)

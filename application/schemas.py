@@ -13,6 +13,13 @@ class AdminBase(BaseModel):
 class AdminCreate(AdminBase):
     mdp: str
 
+class AdminUpdate(BaseModel):
+    nom: Optional[str] = None
+    prenom: Optional[str] = None
+    email: Optional[str] = None
+    poste: Optional[str] = None
+    mdp: Optional[str] = None
+
 class AdminInDB(AdminBase):
     num_admin: str
     creation: datetime
@@ -29,6 +36,13 @@ class ForumUserBase(BaseModel):
 
 class ForumUserCreate(ForumUserBase):
     mdp: str
+
+class ForumUserUpdate(BaseModel):
+    nom: Optional[str] = None
+    prenom: Optional[str] = None
+    email: Optional[str] = None
+    role: Optional[str] = None
+    mdp: Optional[str] = None
 
 class ForumUserInDB(ForumUserBase):
     id: int
@@ -68,22 +82,6 @@ class MessageInDB(MessageBase):
     class Config:
         orm_mode = True
 
-# Schéma pour Profile
-class ProfileBase(BaseModel):
-    annee_exp: str
-    competences: str
-    specialisation: str
-
-class ProfileCreate(ProfileBase):
-    num_etu: int
-
-class ProfileInDB(ProfileBase):
-    id: int
-    creation: datetime
-
-    class Config:
-        orm_mode = True
-
 # Schéma pour Student (étudiant)
 class StudentBase(BaseModel):
     email: str
@@ -95,12 +93,12 @@ class StudentBase(BaseModel):
 class StudentCreate(StudentBase):
     mdp: str
 
-# class StudentUpdate(BaseModel):
-#     nom: Optional[str] = None
-#     prenom: Optional[str] = None
-#     email: Optional[str] = None
-#     num_etu: Optional[str] = None
-#     mdp: Optional[str] = None
+class StudentUpdate(BaseModel):
+    nom: Optional[str] = None
+    prenom: Optional[str] = None
+    email: Optional[str] = None
+    num_etu: Optional[str] = None
+    mdp: Optional[str] = None
 
 class StudentInDB(StudentBase):
     num_etu: int

@@ -23,6 +23,17 @@ def delete_admin(db: Session, num_admin: str):
         return True
     return False
 
+def update_admin(db: Session, num_admin: str, admin_update: schemas.AdminUpdate):
+    db_admin= db.query(models.Admin).filter(models.Admin.num_admin == num_admin).first()
+    if db_admin:
+        for key, value in admin_update.dict(exclude_unset=True).items():
+            setattr(db_admin, key, value)
+        db.commit()
+        db.refresh(db_admin)
+        return db_admin
+    return None
+
+
 # CRUD pour ForumUsers
 def create_user(db: Session, user: schemas.ForumUserCreate):
     db_user = models.ForumUser(**user.dict())
@@ -42,6 +53,16 @@ def delete_user(db: Session, user_id: int):
         db.commit()
         return True
     return False
+
+def update_user(db: Session, user_id: str, user_update: schemas.ForumUserUpdate):
+    db_user = db.query(models.ForumUser).filter(models.ForumUser.id == user_id).first()
+    if db_user:
+        for key, value in user_update.dict(exclude_unset=True).items():
+            setattr(db_user, key, value)
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    return None
 
 # CRUD pour Discussions
 def create_discussion(db: Session, discussion: schemas.DiscussionCreate):
@@ -81,16 +102,6 @@ def delete_message(db: Session, message_id: int):
         return True
     return False
 
-# CRUD pour Profiles
-def create_profile(db: Session, profile: schemas.ProfileCreate):
-    db_profile = models.Profile(**profile.dict())
-    db.add(db_profile)
-    db.commit()
-    db.refresh(db_profile)
-    return db_profile
-
-def get_profile(db: Session, profile_id: int):
-    return db.query(models.Profile).filter(models.Profile.id == profile_id).first()
 
 # CRUD pour Students
 def create_student(db: Session, student: schemas.StudentCreate):
@@ -112,15 +123,15 @@ def delete_student(db: Session, student_id: str):
         return True
     return False
 
-# def update_student(db: Session, student_id: str, student_update: schemas.StudentUpdate):
-#     db_student = db.query(models.Student).filter(models.Student.num_etu == student_id).first()
-#     if db_student:
-#         for key, value in student_update.dict(exclude_unset=True).items():
-#             setattr(db_student, key, value)
-#         db.commit()
-#         db.refresh(db_student)
-#         return db_student
-#     return None
+def update_student(db: Session, student_id: str, student_update: schemas.StudentUpdate):
+    db_student = db.query(models.Student).filter(models.Student.num_etu == student_id).first()
+    if db_student:
+        for key, value in student_update.dict(exclude_unset=True).items():
+            setattr(db_student, key, value)
+        db.commit()
+        db.refresh(db_student)
+        return db_student
+    return None
 
 # CRUD pour Subjects
 def create_subject(db: Session, subject: schemas.SubjectCreate):

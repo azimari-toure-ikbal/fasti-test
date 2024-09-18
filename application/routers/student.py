@@ -18,3 +18,7 @@ def get_student(student_id: int, db: Session = Depends(get_db)):
 @app.delete("/students/{student_id}", response_model=schemas.StudentInDB)
 def delete_student(student_id: int, db: Session = Depends(get_db)):
     return crud.delete_student(db, student_id)
+
+@app.put("/students/{student_id}", response_model=schemas.StudentInDB)
+def put_student(student_id: int, db: Session = Depends(get_db)):
+    return crud.update_student(db, student_id)
