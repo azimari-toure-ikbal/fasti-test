@@ -72,7 +72,7 @@ class Student(Base):
     prenom = Column(String, nullable=False)
     nom = Column(String, nullable=False)
     dob = Column(DateTime, nullable=False)
-    niveau = Column(Enum('L1', 'L2', 'M1', 'M2', name='niveau_etudes'), nullable=False)
+    niveau = Column(Enum('L1', 'L2', 'L3', 'M1', 'M2', name='niveau_etudes'), nullable=False)
     creation = Column(DateTime, default=datetime.utcnow)
 
 
@@ -84,7 +84,7 @@ class Subject(Base):
     id = Column(Integer, primary_key=True, index=True)
     chemin = Column(String)
     module = Column(String, nullable=False)
-    niveau = Column(Enum('L1', 'L2', 'M1', 'M2', name='niveau_etudes'), nullable=False)
+    niveau = Column(Enum('L1', 'L2','L3', 'M1', 'M2', name='niveau_etudes'), nullable=False)
     enseignant = Column(String, nullable=False)
     annee_pub = Column(String)
     creation = Column(DateTime, default=datetime.utcnow)
