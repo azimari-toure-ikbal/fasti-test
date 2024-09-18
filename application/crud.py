@@ -15,6 +15,14 @@ def create_admin(db: Session, admin: schemas.AdminCreate):
 def get_admin(db: Session, num_admin: str):
     return db.query(models.Admin).filter(models.Admin.num_admin == num_admin).first()
 
+def delete_admin(db: Session, num_admin: str):
+    db_admin = db.query(models.Admin).filter(models.Admin.num_admin == num_admin).first()
+    if db_admin:
+        db.delete(db_admin)
+        db.commit()
+        return True
+    return False
+
 # CRUD pour ForumUsers
 def create_user(db: Session, user: schemas.ForumUserCreate):
     db_user = models.ForumUser(**user.dict())
@@ -27,7 +35,13 @@ def create_user(db: Session, user: schemas.ForumUserCreate):
 def get_user(db: Session, user_id: int):
     return db.query(models.ForumUser).filter(models.ForumUser.id == user_id).first()
 
-
+def delete_user(db: Session, user_id: int):
+    db_user = db.query(models.ForumUser).filter(models.ForumUser.id == user_id).first()
+    if db_user:
+        db.delete(db_user)
+        db.commit()
+        return True
+    return False
 
 # CRUD pour Discussions
 def create_discussion(db: Session, discussion: schemas.DiscussionCreate):
@@ -40,6 +54,14 @@ def create_discussion(db: Session, discussion: schemas.DiscussionCreate):
 def get_discussion(db: Session, discussion_id: int):
     return db.query(models.Discussion).filter(models.Discussion.id == discussion_id).first()
 
+def delete_discussion(db: Session, discussion_id: int):
+    db_discussion = db.query(models.Discussion).filter(models.Discussion.id == discussion_id).first()
+    if db_discussion:
+        db.delete(db_discussion)
+        db.commit()
+        return True
+    return False
+
 # CRUD pour Messages
 def create_message(db: Session, message: schemas.MessageCreate):
     db_message = models.Message(**message.dict())
@@ -50,6 +72,14 @@ def create_message(db: Session, message: schemas.MessageCreate):
 
 def get_message(db: Session, message_id: int):
     return db.query(models.Message).filter(models.Message.id == message_id).first()
+
+def delete_message(db: Session, message_id: int):
+    db_message = db.query(models.Message).filter(models.Message.id == message_id).first()
+    if db_message:
+        db.delete(db_message)
+        db.commit()
+        return True
+    return False
 
 # CRUD pour Profiles
 def create_profile(db: Session, profile: schemas.ProfileCreate):
@@ -74,6 +104,24 @@ def create_student(db: Session, student: schemas.StudentCreate):
 def get_student(db: Session, student_id: str):
     return db.query(models.Student).filter(models.Student.num_etu == student_id).first()
 
+def delete_student(db: Session, student_id: str):
+    db_student = db.query(models.Student).filter(models.Student.num_etu == student_id).first()
+    if db_student:
+        db.delete(db_student)
+        db.commit()
+        return True
+    return False
+
+# def update_student(db: Session, student_id: str, student_update: schemas.StudentUpdate):
+#     db_student = db.query(models.Student).filter(models.Student.num_etu == student_id).first()
+#     if db_student:
+#         for key, value in student_update.dict(exclude_unset=True).items():
+#             setattr(db_student, key, value)
+#         db.commit()
+#         db.refresh(db_student)
+#         return db_student
+#     return None
+
 # CRUD pour Subjects
 def create_subject(db: Session, subject: schemas.SubjectCreate):
     db_subject = models.Subject(**subject.dict())
@@ -84,3 +132,12 @@ def create_subject(db: Session, subject: schemas.SubjectCreate):
 
 def get_subject(db: Session, subject_id: int):
     return db.query(models.Subject).filter(models.Subject.id == subject_id).first()
+
+def delete_subject(db: Session, subject_id: int):
+    db_subject = db.query(models.Subject).filter(models.Subject.id == subject_id).first()
+    if db_subject:
+        db.delete(db_subject)
+        db.commit()
+        return True
+    return False
+

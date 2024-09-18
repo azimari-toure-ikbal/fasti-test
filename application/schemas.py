@@ -95,6 +95,13 @@ class StudentBase(BaseModel):
 class StudentCreate(StudentBase):
     mdp: str
 
+# class StudentUpdate(BaseModel):
+#     nom: Optional[str] = None
+#     prenom: Optional[str] = None
+#     email: Optional[str] = None
+#     num_etu: Optional[str] = None
+#     mdp: Optional[str] = None
+
 class StudentInDB(StudentBase):
     num_etu: int
     creation: datetime
