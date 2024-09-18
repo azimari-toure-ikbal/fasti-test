@@ -25,7 +25,7 @@ class AdminInDB(AdminBase):
     creation: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Schéma pour ForumUser (utilisateur du forum)
 class ForumUserBase(BaseModel):
@@ -49,7 +49,7 @@ class ForumUserInDB(ForumUserBase):
     creation: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Schéma pour Discussion
 class DiscussionBase(BaseModel):
@@ -80,7 +80,7 @@ class MessageInDB(MessageBase):
     creation: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Schéma pour Student (étudiant)
 class StudentBase(BaseModel):
@@ -105,7 +105,7 @@ class StudentInDB(StudentBase):
     creation: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Schéma pour Subject (sujet)
 class SubjectBase(BaseModel):
@@ -123,7 +123,7 @@ class SubjectInDB(SubjectBase):
     creation: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 from pydantic import BaseModel

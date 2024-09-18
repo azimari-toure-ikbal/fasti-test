@@ -32,7 +32,7 @@ app.include_router(discussion.app, prefix="/discussions", tags=["Discussions"])
 app.include_router(message.app, prefix="/messages", tags=["Messages"])
 #app.include_router(profile.app, prefix="/profiles", tags=["Profiles"])
 app.include_router(subject.app, prefix="/subjects", tags=["Subjects"])
-app.include_router(student.app, prefix="/students", tags=["Students"])
+app.include_router(student.app,  tags=["Students"])
 
 # Route d'accueil pour tester si l'application est en cours d'exécution
 @app.get("/")

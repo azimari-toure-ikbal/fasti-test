@@ -43,8 +43,8 @@ def create_user(db: Session, user: schemas.ForumUserCreate):
     db.refresh(db_user)
     return db_user
 
-def get_user(db: Session, user_id: int):
-    return db.query(models.ForumUser).filter(models.ForumUser.id == user_id).first()
+def get_user(db: Session, email: str):
+    return db.query(models.ForumUser).filter(models.ForumUser.id == email).first()
 
 def delete_user(db: Session, user_id: int):
     db_user = db.query(models.ForumUser).filter(models.ForumUser.id == user_id).first()

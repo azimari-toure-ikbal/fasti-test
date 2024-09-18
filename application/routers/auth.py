@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from typing import Optional
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Response
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -27,11 +27,11 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 # Fonction pour authentifier un utilisateur en vérifiant son email et mot de passe
-def authenticate_user(db: Session, email: str, password: str):
+def authenticate_user(db: Session, email: str, mdp: str):
     user = get_user(db, email=email)
     if not user:
         return False
-    if not verify_password(password, user.mdp):
+    if not verify_password(mdp, user.mdp):
         return False
     return user
 
@@ -72,7 +72,7 @@ async def get_current_active_user(current_user: ForumUserInDB = Depends(get_curr
     return current_user
 
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, Cookie
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from fastapi.security import OAuth2PasswordRequestForm
@@ -80,20 +80,99 @@ from fastapi.security import OAuth2PasswordRequestForm
 from .. import schemas, crud
 from application.routers import auth
 from application.database import get_db
-
+from ..models import ForumUser
 app = APIRouter()
 
-@app.post("/token", response_model=schemas.Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+# Fonction pour générer un token JWT avec nom, email et rôle
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+@app.post("/forum", response_model=schemas.Token)
+async def login_for_access_token(response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = auth.authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=400,
-            detail="Incorrect email or password",
+            detail="Email ou mot de passe incorrect",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
     access_token_expires = timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    # Inclure le nom, l'email et le rôle dans le token JWT
     access_token = auth.create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={
+            "sub": user.email,  # identifiant principal
+            "name": user.nom,    # nom de l'utilisateur
+            "role": user.role    # rôle de l'utilisateur
+        },
+        expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+
+    # Définir le cookie avec le token JWT
+    response.set_cookie(
+        key="access_token",
+        value=f"Bearer {access_token}",
+        httponly=True,  
+        max_age=30*60,  
+        samesite="Lax"
+    )
+
+    return {
+    "access_token": access_token, 
+    "token_type": "bearer",
+    "name": ForumUser.nom,
+    "role": ForumUser.role
+}
+
+
+
+async def get_current_user(access_token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Impossible de valider les informations d'identification",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    if access_token is None:
+        raise credentials_exception
+    
+    # Retirer "Bearer " du token
+    token = access_token.replace("Bearer ", "")
+    
+    try:
+        # Décodage du token JWT
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        nom: str = payload.get("nom")  # Récupérer le nom
+        role: str = payload.get("role")  # Récupérer le rôle
+        
+        if email is None or nom is None or role is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    
+    user = get_user(db, email=email)
+    if user is None:
+        raise credentials_exception
+    
+    return {"email": email, "name": nom, "role": role}
+
+from pydantic import BaseModel
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    nom: str
+    role: str
+
+
+
