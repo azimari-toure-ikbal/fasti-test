@@ -25,14 +25,14 @@ app.add_middleware(
 )
 
 # Inclure les différents routeurs pour chaque entité
-app.include_router(auth.app, prefix="/auth", tags=["Authentication"])
-app.include_router(admin.app, prefix="/admins", tags=["Admins"])
-app.include_router(user.app, prefix="/users", tags=["Users"])
-app.include_router(discussion.app, prefix="/discussions", tags=["Discussions"])
-app.include_router(message.app, prefix="/messages", tags=["Messages"])
+app.include_router(auth.app, tags=["Authentication"])
+app.include_router(admin.app, tags=["Admins"])
+app.include_router(user.app, tags=["Users"])
+app.include_router(discussion.app, tags=["Discussions"])
+app.include_router(message.app, tags=["Messages"])
 #app.include_router(profile.app, prefix="/profiles", tags=["Profiles"])
-app.include_router(subject.app, prefix="/subjects", tags=["Subjects"])
-app.include_router(student.app,  tags=["Students"])
+app.include_router(subject.app, tags=["Subjects"])
+app.include_router(student.app, tags=["Students"])
 
 # Route d'accueil pour tester si l'application est en cours d'exécution
 @app.get("/")
