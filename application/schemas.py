@@ -8,6 +8,7 @@ class AdminBase(BaseModel):
     prenom: str
     nom: str
     poste: str
+    num_admin: str
 
 class AdminCreate(AdminBase):
     mdp: str

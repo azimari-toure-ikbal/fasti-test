@@ -1,27 +1,27 @@
 from sqlalchemy.orm import Session
 from . import models, schemas
 from werkzeug.security import generate_password_hash
-from models import Admin
+#from models import Admin
 
 # CRUD pour Admins
 def create_admin(db: Session, admin: schemas.AdminCreate):
     db_admin = models.Admin(**admin.dict())
     db.add(db_admin)
+    db_admin.set_password() 
     db.commit()
     db.refresh(db_admin)
-    db_admin.set_password() 
     return db_admin
 
-def get_admin(db: Session, admin_id: int):
-    return db.query(models.Admin).filter(models.Admin.num_admin == admin_id).first()
+def get_admin(db: Session, num_admin: str):
+    return db.query(models.Admin).filter(models.Admin.num_admin == num_admin).first()
 
 # CRUD pour ForumUsers
 def create_user(db: Session, user: schemas.ForumUserCreate):
     db_user = models.ForumUser(**user.dict())
     db.add(db_user)
+    db_user.set_password()
     db.commit()
     db.refresh(db_user)
-    db_user.set_password()
     return db_user
 
 def get_user(db: Session, user_id: int):
@@ -66,12 +66,12 @@ def get_profile(db: Session, profile_id: int):
 def create_student(db: Session, student: schemas.StudentCreate):
     db_student = models.Student(**student.dict())
     db.add(db_student)
+    db_student.set_password()
     db.commit()
     db.refresh(db_student)
-    db_student.set_password()
     return db_student
 
-def get_student(db: Session, student_id: int):
+def get_student(db: Session, student_id: str):
     return db.query(models.Student).filter(models.Student.num_etu == student_id).first()
 
 # CRUD pour Subjects
