@@ -42,14 +42,14 @@ def create_message(message: schemas.MessageCreate, db: Session = Depends(get_db)
 def get_message(message_id: int, db: Session = Depends(get_db)):
     return crud.get_message(db, message_id)
 
-# Routes pour Profiles
-@router.post("/profiles/", response_model=schemas.ProfileInDB)
-def create_profile(profile: schemas.ProfileCreate, db: Session = Depends(get_db)):
-    return crud.create_profile(db, profile)
+# # Routes pour Profiles
+# @router.post("/profiles/", response_model=schemas.ProfileInDB)
+# def create_profile(profile: schemas.ProfileCreate, db: Session = Depends(get_db)):
+#     return crud.create_profile(db, profile)
 
-@router.get("/profiles/{profile_id}", response_model=schemas.ProfileInDB)
-def get_profile(profile_id: int, db: Session = Depends(get_db)):
-    return crud.get_profile(db, profile_id)
+# @router.get("/profiles/{profile_id}", response_model=schemas.ProfileInDB)
+# def get_profile(profile_id: int, db: Session = Depends(get_db)):
+#     return crud.get_profile(db, profile_id)
 
 # Routes pour Students
 @router.post("/students/", response_model=schemas.StudentInDB)

@@ -53,15 +53,15 @@ class Message(Base):
     creation = Column(DateTime, default=datetime.utcnow)
 
 
-class Profile(Base):
-    __tablename__ = "profils"
-    id = Column(Integer, primary_key=True, index=True)
-    num_etu = Column(Integer, ForeignKey('etudiants.num_etu'), nullable=False, unique=True)
-    annee_exp = Column(Integer)
-    competences = Column(String)
-    specialisation = Column(String)
-    chemin_cv = Column(String)
-    creation = Column(DateTime, default=datetime.utcnow)
+# class Profile(Base):
+#     __tablename__ = "profils"
+#     id = Column(Integer, primary_key=True, index=True)
+#     num_etu = Column(Integer, ForeignKey('etudiants.num_etu'), nullable=False, unique=True)
+#     annee_exp = Column(Integer)
+#     competences = Column(String)
+#     specialisation = Column(String)
+#     chemin_cv = Column(String)
+#     creation = Column(DateTime, default=datetime.utcnow)
 
 
 class Student(Base):
