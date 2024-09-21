@@ -5,7 +5,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from application.schemas import ForumUserInDB, Token
-from application.crud import get_user
+from application.crud import get_admin_user, get_forum_user
 from application.database import get_db
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
@@ -33,12 +33,20 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     )
 
 # Fonction pour authentifier un utilisateur en vérifiant son email et mot de passe
-def authenticate_user(db: Session, email: str, password: str):
-    user = get_user(db, email=email)
+def authenticate_admin(db: Session, email: str, password: str):
+    user = get_admin_user(db, email=email)
     if not user:
         return False
     
-    print(f"THERE IS YOUR USER {user}")
+    if not verify_password(password, user.mdp):
+        return False
+    return user
+
+def authenticate_user(db: Session, email: str, password: str):
+    user = get_forum_user(db, email=email)
+    if not user:
+        return False
+    
     if not verify_password(password, user.mdp):
         return False
     return user
@@ -54,8 +62,25 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-@app.post("/auth/token", response_model=Token)
-async def login_for_access_token(response: Response, login_data: LoginData, db: Session = Depends(get_db)):
+@app.post("/auth/admin")
+async def admin_login(login_data: LoginData, db: Session = Depends(get_db)):
+    user = authenticate_admin(db, login_data.email, login_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Email ou mot de passe incorrect",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return {
+        "nom": user.nom,
+        "prenom": user.prenom,
+        "email": user.email,
+        "role": "ADMIN",
+    }
+
+@app.post("/auth/user")
+async def user_login(login_data: LoginData, db: Session = Depends(get_db)):
     user = authenticate_user(db, login_data.email, login_data.password)
     if not user:
         raise HTTPException(
@@ -63,33 +88,12 @@ async def login_for_access_token(response: Response, login_data: LoginData, db: 
             detail="Email ou mot de passe incorrect",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    
-    access_token = create_access_token(
-        data={
-            "email": user.email,
-            "nom": user.nom,
-            "prenom": user.prenom,
-            "role": "something"
-        },
-        expires_delta=access_token_expires
-    )
-
-    # Définir le cookie avec les informations de l'utilisateur
-    response.set_cookie(
-        key="user_info",
-        value=f"nom={user.nom};prenom={user.prenom};email={user.email};role=something",
-        httponly=True,
-        max_age=30*60,
-        samesite="Lax"
-    )
 
     return {
-        "access_token": access_token,
-        "token_type": "bearer",
         "nom": user.nom,
-        "role": "something"
+        "prenom": user.prenom,
+        "email": user.email,
+        "role": user.role,
     }
 
 async def get_current_user(user_info: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
