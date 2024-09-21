@@ -5,6 +5,9 @@ from werkzeug.security import generate_password_hash
 
 # CRUD pour Admins
 def create_admin(db: Session, admin: schemas.AdminCreate):
+    print("CREATE ADMIN")
+    print(admin.dict())
+    
     db_admin = models.Admin(**admin.dict())
     db.add(db_admin)
     db_admin.set_password() 
@@ -44,7 +47,7 @@ def create_user(db: Session, user: schemas.ForumUserCreate):
     return db_user
 
 def get_user(db: Session, email: str):
-    return db.query(models.ForumUser).filter(models.ForumUser.id == email).first()
+    return db.query(models.Admin).filter(models.Admin.email == email).first()
 
 def delete_user(db: Session, user_id: int):
     db_user = db.query(models.ForumUser).filter(models.ForumUser.id == user_id).first()

@@ -9,6 +9,8 @@ router = APIRouter()
 # Routes pour Admins
 @router.post("/admins/", response_model=schemas.AdminInDB)
 def create_admin(admin: schemas.AdminCreate, db: Session = Depends(get_db)):
+    print("THIS IS HAPPENING")
+    print(admin.dict())
     return crud.create_admin(db, admin)
 
 @router.get("/admins/{admin_id}", response_model=schemas.AdminInDB)

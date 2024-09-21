@@ -9,6 +9,7 @@ from application.crud import get_user
 from application.database import get_db
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
+from werkzeug.security import check_password_hash
 
 # Configuration de la sécurité
 SECRET_KEY = "DIT_PROJECT1"  # Remplace par une clé secrète plus forte
@@ -16,7 +17,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # Configuration du contexte de hashage des mots de passe
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["scrypt"], deprecated="auto")
 
 app = APIRouter()
 
@@ -26,13 +27,18 @@ class LoginData(BaseModel):
 
 # Fonction pour vérifier si le mot de passe fourni correspond au hash stocké
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    return check_password_hash(
+        hashed_password,
+        plain_password,
+    )
 
 # Fonction pour authentifier un utilisateur en vérifiant son email et mot de passe
 def authenticate_user(db: Session, email: str, password: str):
     user = get_user(db, email=email)
     if not user:
         return False
+    
+    print(f"THERE IS YOUR USER {user}")
     if not verify_password(password, user.mdp):
         return False
     return user
@@ -65,7 +71,7 @@ async def login_for_access_token(response: Response, login_data: LoginData, db: 
             "email": user.email,
             "nom": user.nom,
             "prenom": user.prenom,
-            "role": user.role
+            "role": "something"
         },
         expires_delta=access_token_expires
     )
@@ -73,7 +79,7 @@ async def login_for_access_token(response: Response, login_data: LoginData, db: 
     # Définir le cookie avec les informations de l'utilisateur
     response.set_cookie(
         key="user_info",
-        value=f"nom={user.nom};prenom={user.prenom};email={user.email};role={user.role}",
+        value=f"nom={user.nom};prenom={user.prenom};email={user.email};role=something",
         httponly=True,
         max_age=30*60,
         samesite="Lax"
@@ -83,7 +89,7 @@ async def login_for_access_token(response: Response, login_data: LoginData, db: 
         "access_token": access_token,
         "token_type": "bearer",
         "nom": user.nom,
-        "role": user.role
+        "role": "something"
     }
 
 async def get_current_user(user_info: Optional[str] = Cookie(None), db: Session = Depends(get_db)):

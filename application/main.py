@@ -10,18 +10,12 @@ Base.metadata.create_all(bind=engine)
 # Instancie l'application FastAPI
 app = FastAPI()
 
-# Gérer les origines CORS
-origins = [
-    "*"
-    # Ajoute ici toutes les autres origines permises
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 
 # Inclure les différents routeurs pour chaque entité
