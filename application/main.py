@@ -11,6 +11,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 origins = [
+    "https://azimari-toure-ikbal.github.io",
     "https://azimari-toure-ikbal.github.io/faby_front",
     "http://localhost:3000",
 ]
