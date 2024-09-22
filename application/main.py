@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from application.database import engine
 from application.models import Base
 from application.routers import admin, user, discussion, message, subject, student, auth
@@ -10,12 +10,17 @@ Base.metadata.create_all(bind=engine)
 # Instancie l'application FastAPI
 app = FastAPI()
 
+origins = [
+    "https://azimari-toure-ikbal.github.io",
+    "http://localhost:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 # Inclure les différents routeurs pour chaque entité
