@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 from application.database import engine
 from application.models import Base
 from application.routers import admin, user, discussion, message, subject, student, auth
