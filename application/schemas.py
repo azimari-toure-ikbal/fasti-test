@@ -102,7 +102,7 @@ class StudentUpdate(BaseModel):
     mdp: Optional[str] = None
 
 class StudentInDB(StudentBase):
-    num_etu: int
+    num_etu: str
     creation: datetime
 
     class Config:
