@@ -1,3 +1,7 @@
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from fastapi.responses import JSONResponse
+from fastapi.requests import Request
+from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from application.database import engine
@@ -23,6 +27,34 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    headers = dict(getattr(exc, "headers", {}))
+    headers["Access-Control-Allow-Origin"] = "*"
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+        headers=headers,
+    )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    headers = {"Access-Control-Allow-Origin": "*"}
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()},
+        headers=headers,
+    )
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    headers = {"Access-Control-Allow-Origin": "*"}
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error"},
+        headers=headers,
+    )
 
 # Inclure les différents routeurs pour chaque entité
 app.include_router(auth.app, tags=["Authentication"])
