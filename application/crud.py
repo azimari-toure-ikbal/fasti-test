@@ -5,9 +5,6 @@ from werkzeug.security import generate_password_hash
 
 # CRUD pour Admins
 def create_admin(db: Session, admin: schemas.AdminCreate):
-    print("CREATE ADMIN")
-    print(admin.dict())
-    
     db_admin = models.Admin(**admin.dict())
     db.add(db_admin)
     db_admin.set_password() 

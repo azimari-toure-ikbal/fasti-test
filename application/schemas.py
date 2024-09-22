@@ -89,6 +89,7 @@ class StudentBase(BaseModel):
     nom: str
     dob: str
     niveau: str
+    num_etu: str
 
 class StudentCreate(StudentBase):
     mdp: str
