@@ -71,7 +71,7 @@ class Student(Base):
     mdp = Column(String, nullable=False)
     prenom = Column(String, nullable=False)
     nom = Column(String, nullable=False)
-    dob = Column(DateTime, nullable=False)
+    dob = Column(String, nullable=False)
     niveau = Column(Enum('L1', 'L2', 'L3', 'M1', 'M2', name='niveau_etudes'), nullable=False)
     creation = Column(DateTime, default=datetime.utcnow)
 
