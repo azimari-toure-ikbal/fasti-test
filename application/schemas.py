@@ -111,14 +111,13 @@ class StudentInDB(StudentBase):
 # Schéma pour Subject (sujet)
 class SubjectBase(BaseModel):
     title: str
-    chemin: str
     module: str
     niveau: str
     enseignant: str
     annee_pub: str
 
 class SubjectCreate(SubjectBase):
-    pass
+    file_data: str  # Base64-encoded file data
 
 class SubjectInDB(SubjectBase):
     id: int

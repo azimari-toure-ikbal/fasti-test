@@ -137,8 +137,10 @@ def update_student(db: Session, student_id: str, student_update: schemas.Student
     return None
 
 # CRUD pour Subjects
-def create_subject(db: Session, subject: schemas.SubjectCreate):
-    db_subject = models.Subject(**subject.dict())
+def create_subject(db: Session, subject: schemas.SubjectCreate, file_path: str):
+    subject_data = subject.dict(exclude={'file_data'})
+    subject_data['chemin'] = file_path
+    db_subject = models.Subject(**subject_data)
     db.add(db_subject)
     db.commit()
     db.refresh(db_subject)
