@@ -1,4 +1,3 @@
-from datetime import datetime
 from sqlalchemy.orm import Session
 from . import models, schemas
 from werkzeug.security import generate_password_hash
@@ -109,9 +108,7 @@ def delete_message(db: Session, message_id: int):
 
 # CRUD pour Students
 def create_student(db: Session, student: schemas.StudentCreate):
-    dob = datetime.strptime(student.dob, '%Y-%m-%d').date()
     db_student = models.Student(**student.dict())
-    db_student.dob = dob
     db.add(db_student)
     db_student.set_password()
     db.commit()
