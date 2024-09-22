@@ -82,6 +82,7 @@ class Student(Base):
 class Subject(Base):
     __tablename__ = "sujets"
     id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
     chemin = Column(String)
     module = Column(String, nullable=False)
     niveau = Column(Enum('L1', 'L2','L3', 'M1', 'M2', name='niveau_etudes'), nullable=False)

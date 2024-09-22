@@ -110,6 +110,7 @@ class StudentInDB(StudentBase):
 
 # Schéma pour Subject (sujet)
 class SubjectBase(BaseModel):
+    title: str
     chemin: str
     module: str
     niveau: str
