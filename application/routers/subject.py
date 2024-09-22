@@ -9,11 +9,11 @@ app = APIRouter()
 # Routes pour Subjects
 @app.post("/subjects", response_model=schemas.SubjectInDB)
 async def create_subject(
-    title: str = Form(...),
-    module: str = Form(...),
-    niveau: str = Form(...),
-    enseignant: str = Form(...),
-    annee_pub: str = Form(...),
+    title: str,
+    module: str,
+    niveau: str,
+    enseignant: str,
+    annee_pub: str,
     file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
