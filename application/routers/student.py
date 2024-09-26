@@ -19,7 +19,7 @@ def get_students(db: Session = Depends(get_db)):
 def get_student(num_etu: str, db: Session = Depends(get_db)):
     return crud.get_student(db, num_etu)
 
-@app.delete("/students/{num_etu}", response_model=schemas.StudentInDB)
+@app.delete("/students/{num_etu}", response_model=bool)
 def delete_student(num_etu: str, db: Session = Depends(get_db)):
     return crud.delete_student(db, num_etu)
 
