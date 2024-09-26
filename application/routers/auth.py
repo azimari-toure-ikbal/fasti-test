@@ -44,6 +44,9 @@ def authenticate_admin(db: Session, email: str, password: str):
 
 def authenticate_user(db: Session, email: str, password: str):
     user = get_forum_user(db, email=email)
+
+    print(f"forum user : {user}")
+
     if not user:
         return False
     
@@ -90,6 +93,7 @@ async def user_login(login_data: LoginData, db: Session = Depends(get_db)):
         )
 
     return {
+        "id": user.id,
         "nom": user.nom,
         "prenom": user.prenom,
         "email": user.email,
