@@ -189,8 +189,10 @@ def get_student(db: Session, student_id: str):
 
 def delete_student(db: Session, student_id: str):
     db_student = db.query(models.Student).filter(models.Student.num_etu == student_id).first()
-    if db_student:
+    db_user = db.query(models.ForumUser).filter(models.ForumUser.email == db_student.email).first()
+    if db_student and db_user:
         db.delete(db_student)
+        db.delete(db_user)
         db.commit()
         return True
     return False
