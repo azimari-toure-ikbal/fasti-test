@@ -1,6 +1,9 @@
+from typing import List
 from sqlalchemy.orm import Session
 from . import models, schemas
 from werkzeug.security import generate_password_hash
+from sqlalchemy.orm import joinedload
+
 #from models import Admin
 
 # CRUD pour Admins
@@ -76,7 +79,29 @@ def create_discussion(db: Session, discussion: schemas.DiscussionCreate):
     return db_discussion
 
 def get_discussions(db: Session):
-    return db.query(models.Discussion).all()
+    discussions = db.query(models.Discussion).join(models.ForumUser).all()
+    finalDiscussions = []
+
+    for discussion in discussions:
+        user = db.query(models.ForumUser).filter(models.ForumUser.id == discussion.id_utilisateur).first()
+        newDiscussion = {
+            "id": discussion.id,
+            "titre": discussion.titre,
+            "sous_titre": discussion.sous_titre,
+            "contenu": discussion.contenu,
+            "creation": discussion.creation,
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "prenom": user.prenom,
+                "nom": user.nom,
+                "role": user.role
+            }
+        }
+
+        finalDiscussions.append(newDiscussion)
+
+    return finalDiscussions
 
 def get_discussion(db: Session, discussion_id: int):
     return db.query(models.Discussion).filter(models.Discussion.id == discussion_id).first()

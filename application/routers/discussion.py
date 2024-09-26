@@ -11,7 +11,7 @@ app = APIRouter()
 def create_discussion(discussion: schemas.DiscussionCreate, db: Session = Depends(get_db)):
     return crud.create_discussion(db, discussion)
 
-@app.get("/discussions", response_model=List[schemas.DiscussionInDB])
+@app.get("/discussions", response_model=List)
 def get_discussions(db: Session = Depends(get_db)):
     return crud.get_discussions(db)
 
