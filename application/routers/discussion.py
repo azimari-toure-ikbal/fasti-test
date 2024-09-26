@@ -15,7 +15,7 @@ def create_discussion(discussion: schemas.DiscussionCreate, db: Session = Depend
 def get_discussions(db: Session = Depends(get_db)):
     return crud.get_discussions(db)
 
-@app.get("/discussions/{discussion_id}", response_model=schemas.DiscussionInDB)
+@app.get("/discussions/{discussion_id}")
 def get_discussion(discussion_id: int, db: Session = Depends(get_db)):
     return crud.get_discussion(db, discussion_id)
 

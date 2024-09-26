@@ -104,7 +104,36 @@ def get_discussions(db: Session):
     return finalDiscussions
 
 def get_discussion(db: Session, discussion_id: int):
-    return db.query(models.Discussion).filter(models.Discussion.id == discussion_id).first()
+    discussion = db.query(models.Discussion).filter(models.Discussion.id == discussion_id).first()
+    messages = db.query(models.Message).filter(models.Message.id_discussion == discussion_id).all()
+    finalMessages = []
+
+    for message in messages:
+        user = db.query(models.ForumUser).filter(models.ForumUser.id == message.id_utilisateur).first()
+        newMessage = {
+            "id": message.id,
+            "contenu": message.contenu,
+            "creation": message.creation,
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "prenom": user.prenom,
+                "nom": user.nom,
+                "role": user.role
+            }
+        }
+
+        finalMessages.append(newMessage)
+
+    return {
+        "id": discussion.id,
+        "titre": discussion.titre,
+        "sous_titre": discussion.sous_titre,
+        "contenu": discussion.contenu,
+        "creation": discussion.creation,
+        "messages": finalMessages
+    }
+
 
 def delete_discussion(db: Session, discussion_id: int):
     db_discussion = db.query(models.Discussion).filter(models.Discussion.id == discussion_id).first()
