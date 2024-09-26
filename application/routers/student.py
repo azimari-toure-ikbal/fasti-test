@@ -11,6 +11,10 @@ app = APIRouter()
 def create_student(student: schemas.StudentCreate, db: Session = Depends(get_db)):
     return crud.create_student(db, student)
 
+@app.get("/students", response_model=List[schemas.StudentInDB])
+def get_students(db: Session = Depends(get_db)):
+    return crud.get_students(db)
+
 @app.get("/students/{student_id}", response_model=schemas.StudentInDB)
 def get_student(student_id: int, db: Session = Depends(get_db)):
     return crud.get_student(db, student_id)

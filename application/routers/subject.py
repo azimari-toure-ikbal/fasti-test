@@ -17,6 +17,10 @@ def create_subject(subject: schemas.SubjectCreate, db: Session = Depends(get_db)
 
     return crud.create_subject(db, subject, file_path)
 
+@app.get("/subjects", response_model=List[schemas.SubjectInDB])
+def get_subjects(db: Session = Depends(get_db)):
+    return crud.get_subjects(db)
+
 @app.get("/subjects/{subject_id}", response_model=schemas.SubjectInDB)
 def get_subject(subject_id: int, db: Session = Depends(get_db)):
     return crud.get_subject(db, subject_id)

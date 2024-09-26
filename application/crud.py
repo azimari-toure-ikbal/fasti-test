@@ -181,6 +181,9 @@ def create_student(db: Session, student: schemas.StudentCreate):
     db.refresh(db_student)
     return db_student
 
+def get_students(db: Session):
+    return db.query(models.Student).all()
+
 def get_student(db: Session, student_id: str):
     return db.query(models.Student).filter(models.Student.num_etu == student_id).first()
 
@@ -211,6 +214,9 @@ def create_subject(db: Session, subject: schemas.SubjectCreate, file_path: str):
     db.commit()
     db.refresh(db_subject)
     return db_subject
+
+def get_subjects(db: Session):
+    return db.query(models.Subject).all()
 
 def get_subject(db: Session, subject_id: int):
     return db.query(models.Subject).filter(models.Subject.id == subject_id).first()
