@@ -15,14 +15,14 @@ def create_student(student: schemas.StudentCreate, db: Session = Depends(get_db)
 def get_students(db: Session = Depends(get_db)):
     return crud.get_students(db)
 
-@app.get("/students/{student_id}", response_model=schemas.StudentInDB)
-def get_student(student_id: int, db: Session = Depends(get_db)):
-    return crud.get_student(db, student_id)
+@app.get("/students/{num_etu}", response_model=schemas.StudentInDB)
+def get_student(num_etu: str, db: Session = Depends(get_db)):
+    return crud.get_student(db, num_etu)
 
-@app.delete("/students/{student_id}", response_model=schemas.StudentInDB)
-def delete_student(student_id: int, db: Session = Depends(get_db)):
-    return crud.delete_student(db, student_id)
+@app.delete("/students/{num_etu}", response_model=schemas.StudentInDB)
+def delete_student(num_etu: str, db: Session = Depends(get_db)):
+    return crud.delete_student(db, num_etu)
 
-@app.put("/students/{student_id}", response_model=schemas.StudentInDB)
-def put_student(student_id: int, db: Session = Depends(get_db)):
-    return crud.update_student(db, student_id)
+@app.put("/students/{num_etu}", response_model=schemas.StudentInDB)
+def put_student(num_etu: str, db: Session = Depends(get_db)):
+    return crud.update_student(db, num_etu)
