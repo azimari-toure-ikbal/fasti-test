@@ -25,7 +25,7 @@ def get_subjects(db: Session = Depends(get_db)):
 def get_subject(subject_id: int, db: Session = Depends(get_db)):
     return crud.get_subject(db, subject_id)
 
-@app.delete("/subjects/{subject_id}", response_model=schemas.SubjectInDB)
+@app.delete("/subjects/{subject_id}", response_model=bool)
 def delete_subject(subject_id: int, db: Session = Depends(get_db)):
     return crud.delete_subject(db, subject_id)
 
