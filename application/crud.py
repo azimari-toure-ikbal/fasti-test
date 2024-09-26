@@ -75,6 +75,9 @@ def create_discussion(db: Session, discussion: schemas.DiscussionCreate):
     db.refresh(db_discussion)
     return db_discussion
 
+def get_discussions(db: Session):
+    return db.query(models.Discussion).all()
+
 def get_discussion(db: Session, discussion_id: int):
     return db.query(models.Discussion).filter(models.Discussion.id == discussion_id).first()
 
