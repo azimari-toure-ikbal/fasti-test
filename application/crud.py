@@ -218,7 +218,22 @@ def create_subject(db: Session, subject: schemas.SubjectCreate, file_path: str):
     return db_subject
 
 def get_subjects(db: Session):
-    return db.query(models.Subject).all()
+    subjects = db.query(models.Subject).all()
+    finalSubjects = []
+
+    for subject in subjects:
+        finalSubjects.append({
+        "id": subject.id,   
+        "title": subject.title,
+        "module": subject.module,
+        "niveau": subject.niveau,
+        "enseignant": subject.enseignant,
+        "annee_pub": subject.annee_pub,
+        "chemin": subject.chemin,
+        "creation": subject.creation
+        })
+
+    return finalSubjects
 
 def get_subject(db: Session, subject_id: int):
     return db.query(models.Subject).filter(models.Subject.id == subject_id).first()
