@@ -107,6 +107,7 @@ def get_discussion(db: Session, discussion_id: int):
     discussion = db.query(models.Discussion).filter(models.Discussion.id == discussion_id).first()
     messages = db.query(models.Message).filter(models.Message.id_discussion == discussion_id).all()
     author = db.query(models.ForumUser).filter(models.ForumUser.id == discussion.id_utilisateur).first()
+
     finalMessages = []
 
     for message in messages:
@@ -129,7 +130,13 @@ def get_discussion(db: Session, discussion_id: int):
     return {
         "id": discussion.id,
         "titre": discussion.titre,
-        "auteur": author,
+        "auteur": {
+            "id": author.id,
+            "email": author.email,
+            "prenom": author.prenom,
+            "nom": author.nom,
+            "role": author.role
+        },
         "sous_titre": discussion.sous_titre,
         "contenu": discussion.contenu,
         "creation": discussion.creation,
